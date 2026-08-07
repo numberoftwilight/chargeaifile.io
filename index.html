@@ -26,6 +26,7 @@
   .btn.ok{background:var(--seal-soft);color:#2A1113}
   .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:600;font-size:13.5px;padding:12px}
   .btn.ghost:hover{color:var(--paper)}
+  .btn[disabled]{opacity:.4;cursor:progress}
 
   details{border:1px solid var(--line);border-radius:10px;padding:0 14px;margin-top:10px}
   summary{cursor:pointer;padding:13px 0;font-size:13.5px;font-weight:600;color:var(--muted);list-style:none}
@@ -55,15 +56,12 @@
   .notice{border:1px solid rgba(107,169,192,.32);background:rgba(107,169,192,.08);
     border-radius:10px;padding:13px 14px;font-size:12.5px;line-height:1.7;color:#C3DCE6;margin-top:16px}
   .notice b{color:#E6F3F8}
+  .notice.hot{border-color:rgba(224,119,108,.4);background:rgba(194,69,61,.09);color:#EFC9C4}
+  .notice.hot b{color:#FBE6E3}
 
-  .panel{border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:16px}
-  .panel.hero{border-color:rgba(224,119,108,.45);background:rgba(194,69,61,.07)}
-  .badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
-    color:var(--seal-soft);border:1px solid rgba(224,119,108,.45);border-radius:99px;padding:3px 9px;margin-bottom:10px}
-  .badge.b2{color:var(--sea);border-color:rgba(107,169,192,.45)}
-
-  .lrow{display:flex;align-items:center;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .lrow{display:flex;align-items:center;gap:9px;padding:12px 0;border-bottom:1px solid var(--line)}
   .lrow .n{font-size:15.5px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lrow .pin{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--seal-soft);letter-spacing:.14em}
   .lrow button{border:1px solid var(--line);background:transparent;color:var(--paper);
     font-family:var(--sans);font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:8px;cursor:pointer;flex:none}
   .lrow button:hover{background:rgba(242,233,216,.07)}
@@ -77,6 +75,13 @@
   .pick:hover{padding-left:11px;color:#fff}
   .pick .arrow{margin-left:auto;color:var(--muted);font-size:13px}
 
+  .pinbox{text-align:center;padding-top:16px}
+  .pinbox input{width:200px;margin:26px auto 0;display:block;background:rgba(242,233,216,.05);
+    border:1px solid var(--line);border-radius:12px;color:var(--paper);font-family:var(--mono);
+    font-size:30px;font-weight:700;letter-spacing:.35em;text-align:center;padding:16px 10px 16px 20px;outline:0}
+  .pinbox input:focus{border-color:var(--seal-soft)}
+  .pinerr{color:var(--seal-soft);font-size:13px;margin-top:14px;min-height:20px}
+
   .reveal{text-align:center}
   .drawer{font-size:15px;color:var(--muted);margin-top:20px}
   .drawer b{color:var(--paper);font-weight:800;font-size:19px}
@@ -85,18 +90,18 @@
   .slip{width:100%;max-width:320px;background:var(--paper);color:var(--ink);border-radius:5px;
     box-shadow:0 22px 44px rgba(0,0,0,.55),0 2px 0 rgba(255,255,255,.35) inset;cursor:pointer;
     position:relative;overflow:hidden;transform-origin:center bottom;
-    transition:transform .5s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;justify-content:center}
+    display:flex;align-items:center;justify-content:center}
   .slip.folded{height:100px;transform:rotateX(5deg)}
   .slip.folded::before,.slip.folded::after{content:"";position:absolute;left:0;right:0;height:1px;background:rgba(36,31,46,.14)}
   .slip.folded::before{top:33px;box-shadow:0 1px 0 rgba(255,255,255,.6)}
   .slip.folded::after{top:67px;box-shadow:0 1px 0 rgba(255,255,255,.6)}
   .slip.open{min-height:300px;cursor:default;align-items:stretch;animation:unfold .5s cubic-bezier(.16,1,.3,1)}
-  @keyframes unfold{from{transform:rotateX(28deg) scaleY(.6);opacity:.4}to{transform:none;opacity:1}}
+  @keyframes unfold{from{transform:rotateX(30deg) scaleY(.55);opacity:.35}to{transform:none;opacity:1}}
   .seal{width:46px;height:46px;border-radius:50%;background:var(--seal);color:#F6E7E4;
     display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;
     box-shadow:0 3px 8px rgba(0,0,0,.35);z-index:2}
   .slip.open .seal{display:none}
-  .inner{padding:26px 22px;text-align:center;width:100%;animation:fadein .4s ease .18s both}
+  .inner{padding:26px 22px;text-align:center;width:100%;animation:fadein .4s ease .16s both}
   @keyframes fadein{from{opacity:0}to{opacity:1}}
   .slip.folded .inner{display:none}
   .inner .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:#8A8095}
@@ -122,7 +127,7 @@
 
 <script>
 (function(){
-  var K='nangman-ppaji-2026-manito';
+  var OBF='nangman-ppaji-2026';
   var DEF_M=['지훈','형준','현진','상현','우상','현기'];
   var DEF_F=['지윤','유리','유정','정아','유정(빠지반장)','예은'];
   var DEF_CORE=[
@@ -142,63 +147,91 @@
     '마니또에게 오늘 스타일 칭찬 한마디 건네기','마니또와 어깨동무하고 사진 찍기','마니또가 하는 일 알아내기'];
 
   var S={m:DEF_M.slice(),f:DEF_F.slice(),core:DEF_CORE.slice(),bonus:DEF_BONUS.slice(),
-         base:'',res:null,shared:'',links:null,open:false,who:-1,err:''};
+         base:'',room:null,pins:null,code:'',busy:false,err:'',
+         who:-1,pin:'',pinErr:'',card:null,open:false};
 
-  function enc(o){var b=new TextEncoder().encode(JSON.stringify(o)),s='';
-    for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]^K.charCodeAt(i%K.length));
+  /* ---------- 인코딩 ---------- */
+  function b64(u8){var s='';for(var i=0;i<u8.length;i++)s+=String.fromCharCode(u8[i]);
     return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-  function dec(t){try{var s=t.replace(/-/g,'+').replace(/_/g,'/'),b=atob(s),a=new Uint8Array(b.length);
-    for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i)^K.charCodeAt(i%K.length);
+  function ub64(t){var s=t.replace(/-/g,'+').replace(/_/g,'/');var b=atob(s),a=new Uint8Array(b.length);
+    for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
+  function pack(o){var b=new TextEncoder().encode(JSON.stringify(o)),a=new Uint8Array(b.length);
+    for(var i=0;i<b.length;i++)a[i]=b[i]^OBF.charCodeAt(i%OBF.length);return b64(a);}
+  function unpack(t){try{var a=ub64(t);for(var i=0;i<a.length;i++)a[i]^=OBF.charCodeAt(i%OBF.length);
     return JSON.parse(new TextDecoder().decode(a));}catch(e){return null;}}
+
+  /* ---------- 암호 ---------- */
+  var SC=(window.crypto&&window.crypto.subtle)?window.crypto.subtle:null;
+  function keyOf(pin,salt,i){
+    var e=new TextEncoder();
+    return SC.importKey('raw',e.encode(pin+'|'+salt),'PBKDF2',false,['deriveKey'])
+      .then(function(k){return SC.deriveKey(
+        {name:'PBKDF2',salt:e.encode(salt+'#'+i),iterations:180000,hash:'SHA-256'},
+        k,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);});
+  }
+  function ivOf(salt,i){
+    return SC.digest('SHA-256',new TextEncoder().encode('iv|'+salt+'|'+i))
+      .then(function(h){return new Uint8Array(h).slice(0,12);});
+  }
+  function seal(txt,pin,salt,i){
+    return Promise.all([keyOf(pin,salt,i),ivOf(salt,i)]).then(function(r){
+      return SC.encrypt({name:'AES-GCM',iv:r[1]},r[0],new TextEncoder().encode(txt))
+        .then(function(c){return b64(new Uint8Array(c));});
+    });
+  }
+  function unseal(ct,pin,salt,i){
+    return Promise.all([keyOf(pin,salt,i),ivOf(salt,i)]).then(function(r){
+      return SC.decrypt({name:'AES-GCM',iv:r[1]},r[0],ub64(ct))
+        .then(function(p){return new TextDecoder().decode(p);});
+    });
+  }
 
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){
     return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
   function range(n){var a=[];for(var i=0;i<n;i++)a.push(i);return a;}
   function bij(n,l){var p=[];while(p.length<n)p=p.concat(shuffle(range(l)));return p.slice(0,n);}
+  function rnd(n){var a=new Uint8Array(n);crypto.getRandomValues(a);return b64(a);}
+  function pin4(){var a=new Uint32Array(1);crypto.getRandomValues(a);return String(1000+(a[0]%9000));}
 
-  function pick3(){
-    var c=S.core.filter(Boolean),b=S.bonus.filter(Boolean);
-    var src=c.length?c:b, one=src[Math.floor(Math.random()*src.length)]||'';
-    var rest=shuffle(b.filter(function(x){return x!==one;})).slice(0,2);
-    return shuffle([one].concat(rest).filter(Boolean));
-  }
-
-  /* 결과 생성 — 화면에 절대 표시하지 않고 링크 안에만 넣는다 */
+  /* ---------- 뽑기 ---------- */
   function build(){
-    var nm=S.m.length, nf=S.f.length, mp, fp, ok, t;
-    for(t=0;t<900;t++){
-      mp=bij(nm,nf); fp=bij(nf,nm); ok=true;
-      if(nm>1&&nf>1) for(var i=0;i<nm;i++){if(fp[mp[i]]===i){ok=false;break;}}
+    var nm=S.m.length,nf=S.f.length,mp,fp,ok;
+    for(var t=0;t<900;t++){
+      mp=bij(nm,nf);fp=bij(nf,nm);ok=true;
+      if(nm>1&&nf>1)for(var i=0;i<nm;i++){if(fp[mp[i]]===i){ok=false;break;}}
       if(ok)break;
     }
-    var names=S.m.concat(S.f), gen=[], tgt=[];
-    for(var a=0;a<nm;a++){gen.push('M');tgt.push(nm+mp[a]);}
-    for(var b=0;b<nf;b++){gen.push('F');tgt.push(fp[b]);}
-    var pool=[], mi=[];
-    names.forEach(function(){
-      mi.push(pick3().map(function(x){var k=pool.indexOf(x);if(k<0){pool.push(x);k=pool.length-1;}return k;}));
+    var ns=S.m.concat(S.f),gs=[],tg=[];
+    for(var a=0;a<nm;a++){gs.push('M');tg.push(nm+mp[a]);}
+    for(var b=0;b<nf;b++){gs.push('F');tg.push(fp[b]);}
+
+    var c=S.core.filter(Boolean),bo=S.bonus.filter(Boolean),pool=[],mi=[];
+    ns.forEach(function(){
+      var src=c.length?c:bo, one=src[Math.floor(Math.random()*src.length)]||'';
+      var three=shuffle([one].concat(shuffle(bo.filter(function(x){return x!==one;})).slice(0,2)).filter(Boolean));
+      mi.push(three.map(function(x){var k=pool.indexOf(x);if(k<0){pool.push(x);k=pool.length-1;}return k;}));
     });
-    return {v:1,ns:names,gs:gen,a:tgt,mp:pool,mi:mi};
-  }
-  function slice(res,i){
-    return {v:1,k:'one',n:res.ns[i],t:res.ns[res.a[i]],g:res.gs[res.a[i]],
-            ms:res.mi[i].map(function(x){return res.mp[x];})};
+
+    var salt=rnd(9), pins=ns.map(function(){return pin4();});
+    return Promise.all(ns.map(function(_,i){
+      return seal(tg[i]+','+mi[i].join(','),pins[i],salt,i);
+    })).then(function(cts){
+      return {room:{v:3,s:salt,ns:ns,gs:gs,mp:pool,ct:cts},pins:pins};
+    });
   }
 
   function baseUrl(){return (S.base.trim()?S.base.trim().split('#')[0]:location.origin+location.pathname);}
-  function sharedLink(){return baseUrl()+'#'+S.shared;}
-  function personLink(i){return baseUrl()+'#'+enc(slice(S.res,i));}
-  function sharedMsg(){
-    return '\uD83C\uDF0A 낭만빠지 마니또 \uD83C\uDF0A\n\n'+
-      '아래 링크에서 본인 이름을 눌러\n마니또와 미션 3개를 확인하세요!\n\n'+
-      '\u26A0\uFE0F 남의 이름 누르면 스포일러입니다. 양심껏!\n'+
-      '\u23F0 8/8(토) 19:00 ~ 공개 전까지\n'+
-      '\uD83D\uDE08 마니또한테 들키면 벌칙\n\n'+sharedLink();
+  function roomLink(){return baseUrl()+'#'+S.code;}
+  function dmMsg(i){
+    return S.room.ns[i]+'님, 낭만빠지 마니또 결과 나왔어요! \uD83C\uDF0A\n\n'+
+      '\u2460 아래 링크 접속\n\u2461 본인 이름 누르기\n\u2462 비밀번호 '+S.pins[i]+' 입력\n\n'+
+      '비밀번호는 본인만 알고 계세요.\n다른 사람 이름을 눌러도 절대 안 열립니다.\n\n'+roomLink();
   }
-  function personMsg(i){
-    return S.res.ns[i]+'님, 낭만빠지 마니또 결과 나왔어요! \uD83C\uDF0A\n'+
-      '아래 링크에서 본인 마니또와 미션 3개를 확인하세요.\n(다른 사람에게 보여주지 마세요)\n\n'+personLink(i);
+  function roomMsg(){
+    return '\uD83C\uDF0A 낭만빠지 마니또 \uD83C\uDF0A\n\n'+
+      '아래 링크에서 본인 이름을 누르고,\n개인톡으로 받은 비밀번호를 넣으면\n마니또와 미션 3개가 나옵니다.\n\n'+
+      '\u23F0 8/8(토) 19:00 ~ 공개 전까지\n\uD83D\uDE08 마니또한테 들키면 벌칙\n\n'+roomLink();
   }
 
   function legacy(t,cb,f){var ta=document.createElement('textarea');ta.value=t;
@@ -215,7 +248,7 @@
     else legacy(text,ok,no);
   }
 
-  /* ---------- 주최자 화면 ---------- */
+  /* ---------- 주최자 ---------- */
   function vCreate(){
     function col(t,k){
       return '<div class="col"><h4>'+t+'</h4>'+S[k].map(function(n,i){
@@ -224,7 +257,7 @@
         '<button class="btn ghost" data-add="'+k+'" style="margin-top:8px;padding:8px;font-size:12px">+ 추가</button></div>';
     }
     return '<div class="eyebrow">Organizer</div><h1>낭만빠지 마니또 만들기</h1>'+
-      '<p class="sub">남자는 여자를, 여자는 남자를 뽑습니다. 결과는 이 화면 어디에도 표시되지 않아요.</p>'+
+      '<p class="sub">남자는 여자를, 여자는 남자를 뽑습니다. 사람마다 비밀번호가 따로 생기고, 결과는 그 비밀번호로만 열립니다.</p>'+
       '<div class="hr"></div><div class="cols">'+col('남자','m')+col('여자','f')+'</div>'+
       '<details><summary>미션 목록 수정</summary><div class="pad">'+
         '<div class="tlabel">기본 미션 <em>— 여기서 1개 배정</em></div>'+
@@ -233,54 +266,59 @@
         '<textarea id="bonus" style="min-height:200px">'+esc(S.bonus.join('\n'))+'</textarea>'+
         '<div class="hint">한 줄에 미션 하나</div></div></details>'+
       '<details><summary>링크 주소 설정 <em style="font-style:normal;color:var(--seal-soft)">중요</em></summary><div class="pad">'+
-        '<input class="url" id="base" value="'+esc(S.base)+'" placeholder="https://아이디.github.io/manito/">'+
-        '<div class="hint">이 파일을 올려둔 실제 주소를 넣어주세요. 비워두면 지금 보고 있는 페이지 주소로 만듭니다.</div></div></details>'+
-      '<button class="btn" id="go">마니또 뽑고 링크 만들기</button>'+
-      '<div class="notice"><b>주최자도 결과를 모릅니다.</b><br>뽑기는 이 브라우저 안에서만 일어나고, 결과는 링크 안에 암호화돼 들어갑니다. 화면에는 이름만 남아요.</div>'+
+        '<input class="url" id="base" value="'+esc(S.base)+'" placeholder="https://numberoftwilight.github.io/manito.io/">'+
+        '<div class="hint">이 파일이 올라가 있는 실제 주소. 비워두면 지금 보고 있는 주소를 씁니다.</div></div></details>'+
+      '<button class="btn" id="go" '+(S.busy?'disabled':'')+'>'+(S.busy?'암호 만드는 중…':'마니또 뽑고 링크 만들기')+'</button>'+
+      '<div class="notice"><b>결과는 이 화면에 나오지 않습니다.</b><br>뽑기는 이 브라우저 안에서만 돌고, 각자 결과는 본인 비밀번호로 암호화됩니다. 주최자도 비밀번호를 넣어 열기 전까지 아무것도 못 봐요.</div>'+
       (S.err?'<div class="hint" style="color:var(--seal-soft);text-align:center">'+esc(S.err)+'</div>':'');
   }
 
-  function vLinks(){
-    var h='<div class="eyebrow">Step 2</div><h1>링크가 준비됐어요</h1>'+
-      '<p class="sub">두 가지 방법 중 하나를 고르세요. 어느 쪽이든 결과는 여는 사람만 봅니다.</p>'+
-      '<div class="panel hero"><span class="badge">방법 1 · 추천</span>'+
-        '<h2>단톡방에 링크 하나만 올리기</h2>'+
-        '<p class="sub">모두 같은 링크로 들어가 본인 이름을 누르면 자기 것만 보입니다. 12번 보낼 필요 없어요.</p>'+
-        '<button class="btn ok" id="cShared">단톡방 문구 통째로 복사</button>'+
-        '<button class="btn ghost" id="cSharedLink">링크만 복사</button></div>'+
-      '<div class="panel"><span class="badge b2">방법 2 · 더 안전</span>'+
-        '<h2>개인 톡으로 따로 보내기</h2>'+
-        '<p class="sub">사람마다 링크가 달라서 남의 결과를 볼 수 없습니다. 대신 12번 보내야 해요.</p>';
+  function vRoom(){
+    var h='<div class="eyebrow">Step 2</div><h1>링크와 비밀번호</h1>'+
+      '<p class="sub">링크는 하나입니다. 비밀번호만 각자에게 따로 보내면 돼요.</p>'+
+      '<div class="notice hot"><b>이 화면을 새로고침하면 비밀번호를 다시 볼 수 없습니다.</b><br>먼저 아래 &lsquo;비밀번호 목록 복사&rsquo;를 눌러 메모장에 붙여두세요.</div>'+
+      '<button class="btn ok" id="cRoom">단톡방 문구 복사 (링크 포함)</button>'+
+      '<button class="btn ghost" id="cList">비밀번호 목록 복사 (백업용)</button>';
     ['남자','여자'].forEach(function(t,gi){
       h+='<div class="grouplabel">'+t+'</div>';
-      S.res.ns.forEach(function(n,i){
-        if((gi===0)!==(S.res.gs[i]==='M'))return;
+      S.room.ns.forEach(function(n,i){
+        if((gi===0)!==(S.room.gs[i]==='M'))return;
         h+='<div class="lrow"><span class="n">'+esc(n)+'</span>'+
-           '<button data-pm="'+i+'">톡 문구</button><button data-pl="'+i+'">링크</button></div>';
+           '<span class="pin">'+S.pins[i]+'</span>'+
+           '<button data-dm="'+i+'">개인톡 문구</button></div>';
       });
     });
-    h+='</div>'+
-      '<div class="notice">본인 몫은 <b>맨 마지막에</b> 여세요. 먼저 열어도 남의 결과는 안 보이지만, 순서를 지키면 헷갈릴 일이 없습니다.</div>'+
-      '<button class="btn ghost" id="again">전부 다시 뽑기</button>'+
-      '<button class="btn ghost" id="back">이름 · 미션 수정하기</button>';
+    h+='<div class="notice">본인 것도 목록에 있습니다. 다른 사람 것 다 보내고 <b>맨 마지막에</b> 본인 비밀번호로 열어보세요.</div>'+
+       '<button class="btn ghost" id="again">전부 다시 뽑기</button>'+
+       '<button class="btn ghost" id="back">이름 · 미션 수정하기</button>';
     return h;
   }
 
-  /* ---------- 참가자 화면 ---------- */
-  function vPickName(res){
+  /* ---------- 참가자 ---------- */
+  function vPick(room){
     var h='<div class="eyebrow">Nangman Ppaji Manito</div><h1>본인 이름을 누르세요</h1>'+
-      '<p class="sub">누른 사람의 마니또만 보입니다. 남의 이름은 누르지 말아주세요 — 재미가 반으로 줄어요.</p>';
+      '<p class="sub">개인톡으로 받은 비밀번호가 있어야 열립니다. 남의 이름을 눌러도 열리지 않아요.</p>';
     ['남자','여자'].forEach(function(t,gi){
       h+='<div class="grouplabel">'+t+'</div>';
-      res.ns.forEach(function(n,i){
-        if((gi===0)!==(res.gs[i]==='M'))return;
-        h+='<button class="pick" data-who="'+i+'"><span>'+esc(n)+'</span><span class="arrow">열기 \u2192</span></button>';
+      room.ns.forEach(function(n,i){
+        if((gi===0)!==(room.gs[i]==='M'))return;
+        h+='<button class="pick" data-who="'+i+'"><span>'+esc(n)+'</span><span class="arrow">\u2192</span></button>';
       });
     });
     return h;
   }
 
-  function vReveal(d,back){
+  function vPin(room){
+    return '<div class="pinbox"><div class="eyebrow">Locked</div>'+
+      '<h1>'+esc(room.ns[S.who])+'님</h1>'+
+      '<p class="sub">개인톡으로 받은 4자리 비밀번호를 넣어주세요.</p>'+
+      '<input id="pin" type="tel" inputmode="numeric" maxlength="4" placeholder="\u2022\u2022\u2022\u2022" value="'+esc(S.pin)+'">'+
+      '<div class="pinerr">'+esc(S.pinErr)+'</div>'+
+      '<button class="btn" id="unlock" '+(S.busy?'disabled':'')+'>'+(S.busy?'여는 중…':'쪽지 열기')+'</button>'+
+      '<button class="btn ghost" id="pback">\u2190 이름 다시 고르기</button></div>';
+  }
+
+  function vReveal(d){
     var g=d.g==='F'?'여자':'남자';
     return '<div class="reveal">'+
       '<div class="eyebrow">Nangman Ppaji Manito</div>'+
@@ -291,44 +329,63 @@
           '<div class="lbl">YOUR MANITO</div><div class="who">'+esc(d.t)+'</div>'+
           '<div class="tag">'+g+' · 끝까지 비밀</div>'+
           '<div class="mission"><h5>MISSION</h5><ol>'+
-            (d.ms||[]).map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ol></div>'+
+            d.ms.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ol></div>'+
           '<div class="rules">기간 · 8/8(토) 19:00 ~ 공개 전까지<br>'+
           '미션 3개 모두 수행 · 마니또에게 들키면 벌칙<br>'+
           '나를 챙겨주는 사람을 알아내면 그 사람 벌칙<br>'+
           '선물 준비 없음, 마음만 준비</div>'+
         '</div></div></div>'+
       (S.open?'':'<div class="tap">TAP TO OPEN</div>')+
-      (S.open?'<p class="sub" style="text-align:center;margin-top:18px">캡처해두면 나중에 다시 볼 수 있어요.<br>캡처 사진 남에게 안 보이게 주의!</p>':'')+
-      (back?'<button class="btn ghost" id="reback">\u2190 이름 목록으로</button>':'')+
-      '</div>';
+      (S.open?'<p class="sub" style="text-align:center;margin-top:18px">캡처해두면 나중에 다시 볼 수 있어요.<br>비밀번호만 기억하면 언제든 다시 열립니다.</p>':'')+
+      '<button class="btn ghost" id="pback">\u2190 처음으로</button></div>';
   }
 
-  function vBad(){return '<div class="bad"><div class="eyebrow">Error</div>'+
-    '<h1 style="font-size:21px">링크가 올바르지 않아요</h1>'+
+  function vBad(msg){return '<div class="bad"><div class="eyebrow">Error</div>'+
+    '<h1 style="font-size:21px">'+(msg||'링크가 올바르지 않아요')+'</h1>'+
     '<p class="sub">주소가 중간에 잘렸을 수 있어요. 링크를 처음부터 끝까지 통째로 복사해서 다시 열어주세요.</p></div>';}
 
   /* ---------- render ---------- */
   function render(){
     var app=document.getElementById('app'), hash=decodeURIComponent(location.hash.slice(1));
+    if(!SC){app.innerHTML=vBad('이 브라우저에서는 열 수 없어요');return;}
     if(hash){
-      var d=dec(hash);
-      if(!d){app.innerHTML=vBad();return;}
-      if(d.k==='one'){app.innerHTML=vReveal(d,false);}
-      else if(S.who>=0){app.innerHTML=vReveal(slice(d,S.who),true);}
-      else{app.innerHTML=vPickName(d);}
-      var sl=document.getElementById('slip');
-      if(sl)sl.onclick=function(){if(!S.open){S.open=true;render();}};
-      var rb=document.getElementById('reback');
-      if(rb)rb.onclick=function(){S.who=-1;S.open=false;render();};
-      document.querySelectorAll('[data-who]').forEach(function(b){
-        b.onclick=function(){S.who=+this.dataset.who;S.open=false;render();};});
+      var room=unpack(hash);
+      if(!room||!room.ns){app.innerHTML=vBad();return;}
+      if(S.card)app.innerHTML=vReveal(S.card);
+      else if(S.who>=0)app.innerHTML=vPin(room);
+      else app.innerHTML=vPick(room);
+      bindGuest(room);
       return;
     }
-    app.innerHTML=S.res?vLinks():vCreate();
-    bind();
+    app.innerHTML=S.room?vRoom():vCreate();
+    bindHost();
   }
 
-  function bind(){
+  function bindGuest(room){
+    var q=function(s){return document.querySelector(s);};
+    document.querySelectorAll('[data-who]').forEach(function(b){
+      b.onclick=function(){S.who=+this.dataset.who;S.pin='';S.pinErr='';render();
+        var el=document.getElementById('pin');if(el)el.focus();};});
+    var pi=q('#pin');
+    if(pi){pi.oninput=function(){S.pin=this.value.replace(/\D/g,'').slice(0,4);this.value=S.pin;};
+      pi.onkeydown=function(e){if(e.key==='Enter')q('#unlock').click();};}
+    if(q('#unlock'))q('#unlock').onclick=function(){
+      if(S.pin.length<4){S.pinErr='4자리를 다 넣어주세요.';render();return;}
+      S.busy=true;S.pinErr='';render();
+      unseal(room.ct[S.who],S.pin,room.s,S.who).then(function(txt){
+        var p=txt.split(',').map(Number);
+        S.card={n:room.ns[S.who],t:room.ns[p[0]],g:room.gs[p[0]],
+                ms:[p[1],p[2],p[3]].map(function(x){return room.mp[x];})};
+        S.busy=false;S.open=false;render();
+      }).catch(function(){
+        S.busy=false;S.pinErr='비밀번호가 맞지 않아요.';S.pin='';render();});
+    };
+    var sl=q('#slip');
+    if(sl)sl.onclick=function(){if(!S.open){S.open=true;render();}};
+    if(q('#pback'))q('#pback').onclick=function(){S.who=-1;S.pin='';S.pinErr='';S.card=null;S.open=false;render();};
+  }
+
+  function bindHost(){
     var q=function(s){return document.querySelector(s);};
     document.querySelectorAll('input[data-k]').forEach(function(i){
       i.oninput=function(){S[this.dataset.k][+this.dataset.i]=this.value;};});
@@ -338,25 +395,28 @@
     if(q('#bonus'))q('#bonus').oninput=function(){S.bonus=this.value.split('\n').map(function(s){return s.trim();}).filter(Boolean);};
     if(q('#base'))q('#base').oninput=function(){S.base=this.value;};
 
-    if(q('#go'))q('#go').onclick=function(){
+    function go(){
       S.m=S.m.map(function(s){return s.trim();}).filter(Boolean);
       S.f=S.f.map(function(s){return s.trim();}).filter(Boolean);
       if(!S.m.length||!S.f.length){S.err='남자와 여자 모두 한 명 이상 필요해요.';render();return;}
-      S.err='';S.res=build();S.shared=enc(S.res);render();
-    };
-    if(q('#cShared'))q('#cShared').onclick=function(){copy(sharedMsg(),this);};
-    if(q('#cSharedLink'))q('#cSharedLink').onclick=function(){copy(sharedLink(),this);};
-    document.querySelectorAll('[data-pl]').forEach(function(b){
-      b.onclick=function(){copy(personLink(+this.dataset.pl),this);};});
-    document.querySelectorAll('[data-pm]').forEach(function(b){
-      b.onclick=function(){copy(personMsg(+this.dataset.pm),this);};});
+      S.err='';S.busy=true;render();
+      build().then(function(r){S.room=r.room;S.pins=r.pins;S.code=pack(r.room);S.busy=false;render();})
+             .catch(function(){S.busy=false;S.err='만들기에 실패했어요. 새로고침 후 다시 시도해주세요.';render();});
+    }
+    if(q('#go'))q('#go').onclick=go;
     if(q('#again'))q('#again').onclick=function(){
-      if(confirm('전부 새로 뽑습니다. 이미 보낸 링크는 무효가 돼요.')){S.res=build();S.shared=enc(S.res);render();}};
+      if(confirm('전부 새로 뽑습니다. 이미 보낸 링크와 비밀번호는 무효가 돼요.')){S.room=null;go();}};
     if(q('#back'))q('#back').onclick=function(){
-      if(confirm('링크가 사라집니다. 계속할까요?')){S.res=null;S.shared='';render();}};
+      if(confirm('링크와 비밀번호가 사라집니다. 계속할까요?')){S.room=null;S.pins=null;S.code='';render();}};
+    if(q('#cRoom'))q('#cRoom').onclick=function(){copy(roomMsg(),this);};
+    if(q('#cList'))q('#cList').onclick=function(){
+      copy('낭만빠지 마니또 비밀번호\n'+roomLink()+'\n\n'+
+        S.room.ns.map(function(n,i){return n+' : '+S.pins[i];}).join('\n'),this);};
+    document.querySelectorAll('[data-dm]').forEach(function(b){
+      b.onclick=function(){copy(dmMsg(+this.dataset.dm),this);};});
   }
 
-  window.addEventListener('hashchange',function(){S.open=false;S.who=-1;render();});
+  window.addEventListener('hashchange',function(){S.who=-1;S.pin='';S.card=null;S.open=false;render();});
   render();
 })();
 </script>
