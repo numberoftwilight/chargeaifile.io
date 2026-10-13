@@ -145,7 +145,8 @@
     width:var(--mascot-size);line-height:0;border-radius:12px;
     animation:mascot-in .7s cubic-bezier(.2,.8,.3,1) both}
   .mascot-btn:hover{filter:none}
-  .mascot-btn img{display:block;width:100%;height:auto;max-height:calc(var(--mascot-size) * 1.4);object-fit:contain;
+  .mascot-btn:focus,.mascot-btn:focus-visible{outline:none}   /* 클릭 후 테두리 안 보이게 */
+  .mascot-btn img{display:block;width:100%;height:auto;max-height:calc(var(--mascot-size) * 1.4);object-fit:contain;border-radius:14px;
     transform-origin:50% 100%;animation:mascot-idle 3.2s ease-in-out .7s infinite}
   .mascot-btn:hover img,.mascot-btn:focus-visible img{animation:mascot-hop .55s ease-out}
   .mascot-btn:active img{animation:mascot-hop .45s ease-out}
@@ -432,7 +433,7 @@
   <footer>요금은 패키지별 상품가격 시트에서 뽑은 판매가입니다. 원가와 수익은 이 페이지에 없습니다.</footer>
 </div>
 
-<!-- 마스코트: index.html 옆 images 폴더의 chiikawa.png(또는 chiikawa1.png), chiikawa2.png, chiikawa3.png 를 띄웁니다.
+<!-- 마스코트: index.html 옆 images 폴더의 chiikawa1~3 (.gif / .webp / .png) 을 띄웁니다. 움짤(gif)도 됩니다.
      있는 파일만 쓰고, 하나도 없으면 자동으로 숨습니다. 클릭할 때마다 다음 캐릭터로 바뀝니다. -->
 <div class="mascot-dock" id="mascotDock" hidden>
   <div class="mascot-bubble" id="mascotBubble" role="status" aria-live="polite"></div>
@@ -1478,7 +1479,10 @@ $('selectBtn').addEventListener('click', () => { $('out').select(); });
 /* ---------- 마스코트 ---------- */
 (function mascot(){
   // 넣을 이미지 목록. 파일을 더 넣으려면 여기에 경로를 추가하세요.
-  const FILES = ['images/chiikawa.png', 'images/chiikawa1.png', 'images/chiikawa2.png', 'images/chiikawa3.png'];
+  // 이름별로 gif → webp → png 순서로 찾아 먼저 있는 파일을 씁니다.
+  const NAMES = ['chiikawa', 'chiikawa1', 'chiikawa2', 'chiikawa3'];
+  const EXTS = ['gif', 'webp', 'png'];
+  const FILES = NAMES.map(n => EXTS.map(e => 'images/' + n + '.' + e));
   const GREETINGS = [];   // 파일 순서대로 다른 인사말을 넣고 싶으면 여기에 (비우면 모두 '안녕하세요!')
   const dock = $('mascotDock'), img = $('mascotImg'), bubble = $('mascotBubble');
   const ok = [];
@@ -1487,19 +1491,24 @@ $('selectBtn').addEventListener('click', () => { $('out').select(); });
     cur = i; img.src = ok[i];
     img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
   };
-  FILES.forEach((src, order) => {
+  const slotOf = src => FILES.findIndex(c => c.includes(src));
+  const tryLoad = (cands, k) => {
+    if (k >= cands.length) return;
     const probe = new Image();
     probe.onload = () => {
-      ok.push(src); ok.sort((a, b) => FILES.indexOf(a) - FILES.indexOf(b));
+      const src = cands[k];
+      ok.push(src); ok.sort((a, b) => slotOf(a) - slotOf(b));
       if (cur < 0){ swap(ok.indexOf(src)); dock.hidden = false; document.body.classList.add('has-mascot'); }
       else cur = ok.indexOf(img.getAttribute('src'));
     };
-    probe.src = src;
-  });
+    probe.onerror = () => tryLoad(cands, k + 1);
+    probe.src = cands[k];
+  };
+  FILES.forEach(c => tryLoad(c, 0));
   $('mascotBtn').addEventListener('click', () => {
     if (ok.length > 1) swap((cur + 1) % ok.length);
     clearTimeout(timer);
-    bubble.textContent = GREETINGS[FILES.indexOf(ok[cur])] || '안녕하세요!';
+    bubble.textContent = GREETINGS[slotOf(ok[cur])] || '안녕하세요!';
     bubble.classList.add('show');
     timer = setTimeout(() => { bubble.classList.remove('show'); }, 2500);
   });
