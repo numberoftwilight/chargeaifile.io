@@ -432,7 +432,7 @@
   <footer>요금은 패키지별 상품가격 시트에서 뽑은 판매가입니다. 원가와 수익은 이 페이지에 없습니다.</footer>
 </div>
 
-<!-- 마스코트: index.html 옆 images 폴더의 chiikawa.png, chiikawa2.png, chiikawa3.png 를 띄웁니다.
+<!-- 마스코트: index.html 옆 images 폴더의 chiikawa.png(또는 chiikawa1.png), chiikawa2.png, chiikawa3.png 를 띄웁니다.
      있는 파일만 쓰고, 하나도 없으면 자동으로 숨습니다. 클릭할 때마다 다음 캐릭터로 바뀝니다. -->
 <div class="mascot-dock" id="mascotDock" hidden>
   <div class="mascot-bubble" id="mascotBubble" role="status" aria-live="polite"></div>
@@ -1478,8 +1478,8 @@ $('selectBtn').addEventListener('click', () => { $('out').select(); });
 /* ---------- 마스코트 ---------- */
 (function mascot(){
   // 넣을 이미지 목록. 파일을 더 넣으려면 여기에 경로를 추가하세요.
-  const FILES = ['images/chiikawa.png', 'images/chiikawa2.png', 'images/chiikawa3.png'];
-  const GREETINGS = ['안녕하세요!', '안녕하세요!', '안녕하세요!'];
+  const FILES = ['images/chiikawa.png', 'images/chiikawa1.png', 'images/chiikawa2.png', 'images/chiikawa3.png'];
+  const GREETINGS = [];   // 파일 순서대로 다른 인사말을 넣고 싶으면 여기에 (비우면 모두 '안녕하세요!')
   const dock = $('mascotDock'), img = $('mascotImg'), bubble = $('mascotBubble');
   const ok = [];
   let cur = -1, timer;
