@@ -148,6 +148,7 @@
   .mascot-btn img{display:block;width:100%;height:auto;max-height:calc(var(--mascot-size) * 1.4);object-fit:contain;
     transform-origin:50% 100%;animation:mascot-idle 3.2s ease-in-out .7s infinite}
   .mascot-btn:hover img,.mascot-btn:focus-visible img{animation:mascot-hop .55s ease-out}
+  .mascot-btn:active img{animation:mascot-hop .45s ease-out}
   .mascot-bubble{pointer-events:none;align-self:flex-start;margin-top:4px;
     background:#fff;color:#4a4a4a;font-size:.8rem;font-weight:500;white-space:nowrap;
     padding:6px 12px;border-radius:14px;box-shadow:0 2px 8px rgba(40,60,60,.08);position:relative;
@@ -431,11 +432,12 @@
   <footer>요금은 패키지별 상품가격 시트에서 뽑은 판매가입니다. 원가와 수익은 이 페이지에 없습니다.</footer>
 </div>
 
-<!-- 마스코트: index.html 옆 images/chiikawa.png 를 띄웁니다. 파일이 없으면 자동으로 숨습니다. -->
+<!-- 마스코트: index.html 옆 images 폴더의 chiikawa.png, chiikawa2.png, chiikawa3.png 를 띄웁니다.
+     있는 파일만 쓰고, 하나도 없으면 자동으로 숨습니다. 클릭할 때마다 다음 캐릭터로 바뀝니다. -->
 <div class="mascot-dock" id="mascotDock" hidden>
   <div class="mascot-bubble" id="mascotBubble" role="status" aria-live="polite"></div>
   <button type="button" class="mascot-btn" id="mascotBtn" aria-label="마스코트에게 인사 받기">
-    <img src="images/chiikawa.png" alt="마스코트 캐릭터" id="mascotImg" decoding="async">
+    <img alt="마스코트 캐릭터" id="mascotImg" decoding="async">
   </button>
 </div>
 
@@ -1475,17 +1477,31 @@ $('selectBtn').addEventListener('click', () => { $('out').select(); });
 
 /* ---------- 마스코트 ---------- */
 (function mascot(){
+  // 넣을 이미지 목록. 파일을 더 넣으려면 여기에 경로를 추가하세요.
+  const FILES = ['images/chiikawa.png', 'images/chiikawa2.png', 'images/chiikawa3.png'];
+  const GREETINGS = ['안녕하세요!', '안녕하세요!', '안녕하세요!'];
   const dock = $('mascotDock'), img = $('mascotImg'), bubble = $('mascotBubble');
-  const show = () => { dock.hidden = false; document.body.classList.add('has-mascot'); };
-  img.addEventListener('error', () => { dock.hidden = true; document.body.classList.remove('has-mascot'); });
-  if (img.complete && img.naturalWidth) show(); else img.addEventListener('load', show);
-  let timer;
+  const ok = [];
+  let cur = -1, timer;
+  const swap = i => {
+    cur = i; img.src = ok[i];
+    img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
+  };
+  FILES.forEach((src, order) => {
+    const probe = new Image();
+    probe.onload = () => {
+      ok.push(src); ok.sort((a, b) => FILES.indexOf(a) - FILES.indexOf(b));
+      if (cur < 0){ swap(ok.indexOf(src)); dock.hidden = false; document.body.classList.add('has-mascot'); }
+      else cur = ok.indexOf(img.getAttribute('src'));
+    };
+    probe.src = src;
+  });
   $('mascotBtn').addEventListener('click', () => {
-    const on = !bubble.classList.contains('show');
+    if (ok.length > 1) swap((cur + 1) % ok.length);
     clearTimeout(timer);
-    bubble.textContent = on ? '안녕하세요!' : '';
-    bubble.classList.toggle('show', on);
-    if (on) timer = setTimeout(() => { bubble.classList.remove('show'); }, 2500);
+    bubble.textContent = GREETINGS[FILES.indexOf(ok[cur])] || '안녕하세요!';
+    bubble.classList.add('show');
+    timer = setTimeout(() => { bubble.classList.remove('show'); }, 2500);
   });
 })();
 
