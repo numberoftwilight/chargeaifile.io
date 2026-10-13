@@ -983,6 +983,7 @@ function wxCities(){
 async function fetchWeather(){
   const st = $('wxStatus'), s = $('date').value, e = $('mEnd').value || s;
   if (!s){ st.textContent = '출발일을 먼저 넣으세요.'; return; }
+  if (e < s){ st.textContent = '귀국일(' + md(parseISO(e), true) + ')이 출발일(' + md(parseISO(s), true) + ')보다 빠릅니다. 귀국일을 고쳐주세요.'; return; }
   const cities = wxCities();
   if (!cities.length){
     const known = Object.keys(TPL['_도시좌표'] || {}).filter(k => !k.startsWith('_'));
@@ -1002,8 +1003,14 @@ async function fetchWeather(){
       const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.lat + '&longitude=' + c.lon +
         '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
         '&timezone=auto&start_date=' + from + '&end_date=' + to;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      let res;
+      try { res = await fetch(url); }
+      catch (netErr){ const e2 = new Error('network'); e2.network = true; throw e2; }
+      if (!res.ok){
+        let reason = '';
+        try { reason = (await res.json()).reason || ''; } catch (_) {}
+        throw new Error(c.name + ' 예보 요청이 거절됐습니다 (' + res.status + (reason ? ': ' + reason : '') + ')');
+      }
       const d = (await res.json()).daily;
       d.time.forEach((t, i) => {
         const lo = Math.round(d.temperature_2m_min[i]), hi = Math.round(d.temperature_2m_max[i]);
@@ -1020,7 +1027,9 @@ async function fetchWeather(){
     st.textContent = '예보 반영 완료 (Open-Meteo, ' + new Date().toLocaleString('ko-KR', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' }) + ' 기준).' + cut;
     render();
   } catch (err){
-    st.textContent = '날씨 서버에 연결하지 못했습니다. claude.ai 미리보기 링크에서는 외부 연결이 막혀 있어요. 깃허브 주소나 내려받은 index.html 에서 쓰세요.';
+    st.textContent = err.network
+      ? '날씨 서버(api.open-meteo.com)에 연결하지 못했습니다. claude.ai 미리보기 링크이거나, 회사 네트워크·보안 프로그램이 막고 있을 수 있어요. 깃허브 주소에서 다시 눌러보고, 그래도 안 되면 휴대폰 데이터로 열어 확인해 주세요.'
+      : err.message;
   }
 }
 
@@ -1114,8 +1123,19 @@ function boot(){
   });
 
   if (!$('date').value) $('date').value = iso(new Date());
-  render();
   if (!$('mEnd').value && $('date').value) $('mEnd').value = iso(plus($('date').value, 4));
+  // 출발일을 바꾸면 귀국일이 출발일보다 앞서지 않게 기간(기본 5일)을 유지해 따라 움직임
+  let lastStart = $('date').value;
+  $('date').addEventListener('input', () => {
+    const s = $('date').value; if (!s) return;
+    const e = $('mEnd').value;
+    const span = (lastStart && e && e >= lastStart) ? Math.round((parseISO(e) - parseISO(lastStart)) / 864e5) : 4;
+    if (!e || e < s || MODE === 'msg') $('mEnd').value = iso(plus(s, span));
+    $('mEnd').min = s;
+    lastStart = s;
+  });
+  $('mEnd').min = $('date').value;
+  render();
 }
 
 $('copyBtn').addEventListener('click', async () => {
