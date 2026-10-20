@@ -497,16 +497,48 @@ const HOLI_YEARS = new Set([...HOLI].map(d => d.slice(0, 4)));
 const isOff = d => isWeekend(d) || HOLI.has(iso(d));
 
 /* ---------- 항공권 붙여넣기 읽기 ---------- */
-const AIRLINES = {KE:'대한항공',OZ:'아시아나항공',VJ:'비엣젯항공',VN:'베트남항공',QH:'뱀부항공','7C':'제주항공',LJ:'진에어',TW:'티웨이항공',
-  ZE:'이스타항공',BX:'에어부산',RS:'에어서울',YP:'에어프레미아',RF:'에어로케이',CA:'중국국제항공',MU:'중국동방항공',CZ:'중국남방항공',
-  '3U':'사천항공',SC:'산동항공',MF:'샤먼항공',HO:'길상항공',FM:'상하이항공',ZH:'선전항공','8L':'럭키항공',KN:'중국연합항공',
-  GS:'천진항공',HU:'해남항공',JD:'수도항공',EU:'청두항공',TV:'티베트항공',PN:'서부항공',G5:'화하항공',NS:'하북항공',CX:'캐세이퍼시픽'};
-const AIRPORTS = {ICN:'인천',GMP:'김포',PUS:'부산',CJU:'제주',TAE:'대구',CJJ:'청주',MWX:'무안',
-  PQC:'푸꾸옥',SGN:'호치민',HAN:'하노이',DAD:'다낭',CXR:'나트랑',XMN:'샤먼',YNT:'연태',CTU:'청두',TFU:'청두',DLC:'대련',
-  TAO:'칭다오',PEK:'북경',PKX:'북경',CKG:'충칭',YNJ:'연길',KMG:'쿤밍',DYG:'장가계',LJG:'리장',JZH:'구채구',SHE:'심양',
-  CGQ:'장춘',PVG:'상해',SHA:'상해',CAN:'광저우',HKG:'홍콩',TXN:'황산',KWL:'계림',CGO:'정주',SJW:'석가장',TNA:'제남',DIG:'샹그릴라',CIH:'장치'};
+const AIRLINES = {
+  // 한국
+  KE:'대한항공',OZ:'아시아나항공','7C':'제주항공',LJ:'진에어',TW:'티웨이항공',ZE:'이스타항공',BX:'에어부산',RS:'에어서울',
+  YP:'에어프레미아',RF:'에어로케이','4V':'플라이강원',
+  // 베트남
+  VJ:'비엣젯항공',VN:'베트남항공',QH:'뱀부항공','9G':'썬푸꾸옥항공',VU:'비엣트래블항공',BL:'퍼시픽에어라인',
+  // 중국·홍콩·대만·마카오
+  CA:'중국국제항공',MU:'중국동방항공',CZ:'중국남방항공','3U':'사천항공',SC:'산동항공',MF:'샤먼항공',HO:'길상항공',FM:'상하이항공',
+  ZH:'선전항공','8L':'럭키항공',KN:'중국연합항공',GS:'천진항공',HU:'해남항공',JD:'수도항공',EU:'청두항공',TV:'티베트항공',
+  PN:'서부항공',G5:'화하항공',NS:'하북항공',DR:'루이리항공',UQ:'우루무치항공','9C':'춘추항공',BK:'오케이항공',KY:'쿤밍항공',
+  QW:'청도항공',GJ:'장룡항공','9H':'장안항공',DZ:'동해항공',A6:'홍토항공',GX:'광서항공',Y8:'양쯔강항공',
+  CX:'캐세이퍼시픽',UO:'홍콩익스프레스',HX:'홍콩항공',NX:'마카오항공',CI:'중화항공',BR:'에바항공',IT:'타이거에어타이완',JX:'스타럭스항공',
+  // 일본
+  JL:'일본항공',NH:'전일본공수',MM:'피치항공',BC:'스카이마크',GK:'젯스타재팬',ZG:'집에어',HD:'에어두',NU:'일본트랜스오션항공',
+  // 동남아·기타 아시아
+  SQ:'싱가포르항공',TR:'스쿠트',TG:'타이항공',FD:'타이에어아시아',XJ:'타이에어아시아엑스',VZ:'타이비엣젯',SL:'타이라이언에어',
+  DD:'녹에어',WE:'타이스마일',PG:'방콕에어웨이즈',MH:'말레이시아항공',AK:'에어아시아',D7:'에어아시아엑스',Z2:'필리핀에어아시아',
+  PR:'필리핀항공','5J':'세부퍼시픽',GA:'가루다인도네시아',QZ:'인도네시아에어아시아',JT:'라이온에어',K6:'캄보디아앙코르항공',
+  QV:'라오항공',UB:'미얀마국제항공',OM:'몽골항공',MR:'훈누항공',HY:'우즈베키스탄항공',KC:'에어아스타나',
+  // 장거리
+  QR:'카타르항공',EK:'에미레이트항공',EY:'에티하드항공',TK:'터키항공',LH:'루프트한자',AF:'에어프랑스',KL:'KLM',BA:'영국항공',
+  AY:'핀에어',LO:'폴란드항공',DL:'델타항공',UA:'유나이티드항공',AA:'아메리칸항공',AC:'에어캐나다',HA:'하와이안항공',
+  NZ:'에어뉴질랜드',QF:'콴타스항공',JQ:'젯스타',UL:'스리랑카항공',AI:'에어인디아'
+};
+const AIRPORTS = {ICN:'인천',GMP:'김포',PUS:'부산',CJU:'제주',TAE:'대구',CJJ:'청주',MWX:'무안',YNY:'양양',
+  PQC:'푸꾸옥',SGN:'호치민',HAN:'하노이',DAD:'다낭',CXR:'나트랑',DLI:'달랏',HPH:'하이퐁',VCA:'껀터',HUI:'후에',
+  XMN:'샤먼',YNT:'연태',CTU:'청두',TFU:'청두',DLC:'대련',TAO:'칭다오',PEK:'북경',PKX:'북경',CKG:'충칭',YNJ:'연길',KMG:'쿤밍',
+  DYG:'장가계',LJG:'리장',JZH:'구채구',SHE:'심양',CGQ:'장춘',PVG:'상해',SHA:'상해',CAN:'광저우',SZX:'선전',HKG:'홍콩',MFM:'마카오',
+  TXN:'황산',KWL:'계림',CGO:'정주',SJW:'석가장',TNA:'제남',DIG:'샹그릴라',CIH:'장치',HGH:'항주',NKG:'남경',XIY:'서안',WUH:'무한',
+  HRB:'하얼빈',SYX:'싼야',HAK:'하이커우',FOC:'복주',NNG:'남녕',KHN:'남창',WEH:'위해',
+  TPE:'타이베이',TSA:'타이베이',KHH:'가오슝',RMQ:'타이중',
+  NRT:'나리타',HND:'하네다',KIX:'간사이',ITM:'이타미',NGO:'나고야',FUK:'후쿠오카',CTS:'삿포로',OKA:'오키나와',MMY:'미야코',
+  ISG:'이시가키',KOJ:'가고시마',KMJ:'구마모토',OIT:'오이타',HIJ:'히로시마',SDJ:'센다이',KMQ:'고마쓰',TAK:'다카마쓰',MYJ:'마쓰야마',
+  BKK:'방콕',DMK:'방콕',HKT:'푸켓',CNX:'치앙마이',USM:'코사무이',SIN:'싱가포르',KUL:'쿠알라룸푸르',BKI:'코타키나발루',PEN:'페낭',
+  MNL:'마닐라',CEB:'세부',MPH:'보라카이',KLO:'보라카이',PPS:'팔라완',DPS:'발리',CGK:'자카르타',PNH:'프놈펜',REP:'씨엠립',KTI:'씨엠립',
+  VTE:'비엔티안',LPQ:'루앙프라방',RGN:'양곤',UBN:'울란바토르',ULN:'울란바토르',GUM:'괌',SPN:'사이판',ROR:'팔라우',
+  TAS:'타슈켄트',ALA:'알마티',DXB:'두바이',DOH:'도하',IST:'이스탄불',HNL:'호놀룰루',SYD:'시드니'};
+const AP_ALIAS = {'상하이':'PVG','베이징':'PEK','칭따오':'TAO','청도':'TAO','하문':'XMN','옌타이':'YNT','옌지':'YNJ','호찌민':'SGN',
+  '나짱':'CXR','도쿄':'NRT','오사카':'KIX','세부':'CEB','타이페이':'TPE','장자제':'DYG','주자이거우':'JZH','시안':'XIY','항저우':'HGH',
+  '하이난':'SYX','삼아':'SYX','캄란':'CXR','깜라인':'CXR'};
 const KR_AP = new Set(['ICN','GMP','PUS','CJU','TAE','CJJ','MWX']);
-const AP_BY_NAME = Object.entries(AIRPORTS).reduce((o, [c, n]) => (o[n] = o[n] || c, o), {});
+const AP_BY_NAME = Object.assign(Object.entries(AIRPORTS).reduce((o, [c, n]) => (o[n] = o[n] || c, o), {}), AP_ALIAS);
 const MON = {JAN:1,FEB:2,MAR:3,APR:4,MAY:5,JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12};
 
 function guessYear(m, d){
@@ -554,8 +586,21 @@ function findAirports(s){
 function parseTicket(text){
   const src = text.replace(/[：]/g, ':').replace(/[～〜]/g, '~').replace(/\r/g, '');
   const lines = src.split('\n');
-  const codes = Object.keys(AIRLINES).join('|');
-  const fnRe = new RegExp('(?<![A-Z0-9])(' + codes + ')\\s?(\\d{2,4})(?![\\d:])');
+  // 편명: 항공사 코드 2자리(영문2 / 영문+숫자 / 숫자+영문) + 숫자 2~4자리. 목록에 없는 항공사도 읽습니다.
+  const fnRe = /(?<![A-Z0-9])([A-Z]{2}|[A-Z][0-9]|[0-9][A-Z])\s?(\d{2,4})(?![\dA-Z:.\/\-])/g;
+  const NOT_AIR = new Set(['AM','PM','KG','KM','NO','OK','TO','AT','ON','IN','OF','HK','ID','EA','PC','T1','T2','T3','UTC','GMT','KR','VN','CN','JP','TEL','FAX']);
+  const flightOn = (ln, i) => {
+    const U = ln.toUpperCase(); let m, unknown = null;
+    fnRe.lastIndex = 0;
+    while ((m = fnRe.exec(U))){
+      if (AIRLINES[m[1]]) return { air: m[1], no: m[1] + m[2] };
+      if (!unknown && !NOT_AIR.has(m[1])) unknown = { air: m[1], no: m[1] + m[2] };
+    }
+    if (!unknown) return null;
+    // 목록에 없는 코드는 항공 문맥(항공/편/FLIGHT 글자 또는 근처 시각)이 있을 때만 편명으로 봅니다
+    const near = lines.slice(Math.max(0, i - 1), i + 4).join(' ');
+    return (/항공|편명|FLIGHT|AIR/i.test(near) || findTimes(near).length) ? unknown : null;
+  };
   const gds = /^\s*\d{1,2}\s+([A-Z0-9]{2})\s*(\d{1,4})\s*[A-Z]?\s+(\d{1,2}[A-Z]{3})\s+(?:[A-Z0-9]{1,2}\s+)?\*?([A-Z]{3})\s*([A-Z]{3})\s+\S+\s+(\d{4})\s+(\d{4})(\+1)?/i;
   const segs = [];
 
@@ -570,7 +615,10 @@ function parseTicket(text){
   // 2) 일반 텍스트 (e티켓·예약화면)
   if (!segs.length){
     const fl = [];
-    lines.forEach((ln, i) => { const m = ln.toUpperCase().match(fnRe); if (m) fl.push({ i, air: m[1], no: m[1] + m[2] }); });
+    lines.forEach((ln, i) => {
+      const f = flightOn(ln, i);
+      if (f){ const nm = ln.match(/([가-힣]{1,6}\s)?[가-힣]*항공/); f.name = nm ? nm[0].trim() : ''; f.i = i; fl.push(f); }
+    });
     const uniq = fl.filter((f, k) => !fl.slice(0, k).some(p => p.no === f.no));
     const firstTime = lines.findIndex(l => findTimes(l).length);
     const before = uniq.length && firstTime >= 0 && firstTime < uniq[0].i;
@@ -584,8 +632,8 @@ function parseTicket(text){
       const times = findTimes(chunk);
       let date = findDate(chunk);
       if (!date) for (let j = f.i - 1; j >= 0 && !date; j--) date = findDate(lines[j]);
-      const aps = findAirports(chunk.toUpperCase().replace(new RegExp(f.no.replace(/(\d+)$/, '\\s?$1'), 'g'), ' '));
-      segs.push({ air: f.air, no: f.no, date, dep: times[0] || '', arr: times[1] || '',
+      const aps = findAirports(chunk.toUpperCase().replace(new RegExp(f.no.replace(/(\d+)$/, '\\s?$1'), 'g'), ' ').replace(/[가-힣]*항공/g, ' '));
+      segs.push({ air: f.air, name: f.name, no: f.no, date, dep: times[0] || '', arr: times[1] || '',
         from: aps[0] || '', to: aps[1] || '', plus1: /\+\s?1/.test(chunk) });
     });
   }
@@ -595,16 +643,17 @@ function parseTicket(text){
 function readTicket(){
   const st = $('airStatus');
   const segs = parseTicket($('airPaste').value);
-  if (!segs.length){ st.textContent = '편명을 찾지 못했습니다. 편명(예: ZE891, VJ 975)이 들어간 텍스트인지 확인하세요.'; return; }
+  if (!segs.length){ st.textContent = '편명을 찾지 못했습니다. 편명(예: ZE891, 9G455, VJ 975)이 들어간 텍스트인지 확인하세요. 계속 안 되면 붙여넣은 텍스트를 그대로 보내주세요.'; return; }
   const out = segs.find(s => KR_AP.has(s.from)) || segs[0];
   const back = [...segs].reverse().find(s => KR_AP.has(s.to) && s !== out) || (segs.length > 1 ? segs[segs.length - 1] : null);
   const set = (id, v) => { if (v) $(id).value = v; };
-  $('airName').value = AIRLINES[out.air] || '';
+  const airNm = sg => AIRLINES[sg.air] || sg.name || sg.air;
+  $('airName').value = airNm(out);
   set('outNo', out.no); set('outDep', out.dep); set('outArr', out.arr); set('outDate', out.date);
   if (back){ set('inNo', back.no); set('inDep', back.dep); set('inArr', back.arr); set('inDate', back.date); }
   const local = !KR_AP.has(out.to) ? out.to : (back && !KR_AP.has(back.from) ? back.from : '');
   if (local && AIRPORTS[local]) $('airCity').value = AIRPORTS[local];
-  if (back && back.air !== out.air) $('airName').value = (AIRLINES[out.air] || out.air) + ' / ' + (AIRLINES[back.air] || back.air);
+  if (back && back.air !== out.air) $('airName').value = airNm(out) + ' / ' + airNm(back);
 
   let fareMsg = '';
   const tot = $('airPaste').value.match(/TOTAL\s*[:：]?\s*([\d,]{4,})\s*원?/i) || $('airPaste').value.match(/총\s*(?:결제\s*)?(?:금액|합계)\s*[:：]?\s*([\d,]{4,})\s*원/);
@@ -636,6 +685,9 @@ function legDates(start, days){
 }
 function flightFlags(r, nightsLabel){
   const f = [];
+  const vj = /^VJ/i.test(val('outNo')) || /^VJ/i.test(val('inNo'));
+  if (r && r.kind === 'table' && r.tpl.schedule && !Array.isArray(r.tpl.schedule) && vj && AIRLINE === '국적기')
+    f.push('넣은 항공이 비엣젯(VJ)인데 국적기 기준 요금·일정으로 계산하고 있습니다. <button type="button" class="small ghost" data-fix="vj">비엣젯 기준으로 바꾸기</button>');
   if (!r || !r.date || !(val('outDate') || val('inDate'))) return f;
   const L = legDates(r.date, r.days), home = iso(plus(r.date, r.days - 1));
   if (val('outDate') && val('outDate') !== r.date)
@@ -1445,6 +1497,7 @@ function boot(){
   $('toMsgBtn').addEventListener('click', toMsg);
   $('flags').addEventListener('click', e => {
     const b = e.target.closest('[data-fix]'); if (!b) return;
+    if (b.dataset.fix === 'vj'){ AIRLINE = '비엣젯'; render(); return; }
     if (b.dataset.fix === 'date'){
       $('date').value = b.dataset.v;
       $('date').dispatchEvent(new Event('input', { bubbles: true }));
